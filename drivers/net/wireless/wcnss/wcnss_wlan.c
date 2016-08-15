@@ -85,10 +85,6 @@ static int do_not_cancel_vote = WCNSS_CONFIG_UNSPECIFIED;
 module_param(do_not_cancel_vote, int, S_IWUSR | S_IRUGO);
 MODULE_PARM_DESC(do_not_cancel_vote, "Do not cancel votes for wcnss");
 
-static char *wcnss_build_version = "unknown";
-module_param(wcnss_build_version, charp, S_IRUGO);
-MODULE_PARM_DESC(wcnss_build_version, "wcnss build version");
-
 static DEFINE_SPINLOCK(reg_spinlock);
 
 #define RIVA_SPARE_OFFSET		0x0b4
@@ -2233,9 +2229,6 @@ static void wcnssctrl_rx_handler(struct work_struct *worker)
 		}
 		build[len] = 0;
 		pr_info("wcnss: build version %s\n", build);
-		strncpy(wcnss_build_version, build, WCNSS_MAX_BUILD_VER_LEN);
-		wcnss_build_version[WCNSS_MAX_BUILD_VER_LEN] = '\0';
-
 		break;
 
 	case WCNSS_NVBIN_DNLD_RSP:
@@ -3440,12 +3433,6 @@ static int __init wcnss_wlan_init(void)
 	else {
 		memset( wcnss_ready, 0, 32 );
 	}
-
-	wcnss_build_version = (char *) kmalloc(WCNSS_MAX_BUILD_VER_LEN+1, GFP_KERNEL);
-	if( wcnss_build_version == NULL )
-		printk("[wcnss]: wcnss_build_version, kmalloc fail.\n");
-	else
-		memset( wcnss_build_version, 0, WCNSS_MAX_BUILD_VER_LEN+1 );
 	/*--------------------------------------------------*/
 
 	pr_info("[wcnss]: wcnss_wlan_init -.\n");
